@@ -1,0 +1,9 @@
+{{
+	"version": "https://jsonfeed.org/version/1",
+	"title": "@{user}",
+	"home_page_url": "{host}",
+	"feed_url": "{host}/feed.json",
+	"items": [
+		{feeds}
+	]
+}}

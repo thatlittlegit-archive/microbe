@@ -1,0 +1,6 @@
+<item>
+	<title>{time}</title>
+	<description>{content}</description>
+	<link>{hostname}/{slug}</link>
+	<guid isPermaLink="false">{id}</guid>
+</item>

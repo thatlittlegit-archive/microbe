@@ -1,0 +1,6 @@
+{{
+	"id": "{id}",
+	"content_text": "{content}",
+	"url": "/{slug}",
+	"date_published": "{time}"
+}}

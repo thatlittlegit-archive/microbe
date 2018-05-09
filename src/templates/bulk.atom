@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- http because validation :( -->
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>{user}</title>
+	<subtitle>microbe feed by {user}</subtitle>
+	<link href="{host}/feed.atom" rel="self" />
+	<link href="{host}" />
+	<id>{id}</id>
+	<updated>{now}</updated>
+
+	{feeds}
+</feed>

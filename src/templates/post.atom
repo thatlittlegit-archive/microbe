@@ -1,0 +1,12 @@
+<entry>
+	<title>{time}</title>
+	<link type="text/html" href="{slug}" />
+	<id>{id}</id>
+	<updated>{time}</updated>
+	<author>
+		<name>microbe user</name>
+	</author>
+	<content type="text">
+		{content}
+	</content>
+</entry>

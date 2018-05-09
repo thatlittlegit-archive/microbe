@@ -34,33 +34,17 @@ struct Post {
 
 impl Post {
     fn as_rss(&self) -> String {
-        format!(
-            "<item>
-    <title>{time}</title>
-    <description>{content}</description>
-    <link>{host}/{slug}</link>
-    <guid isPermaLink=\"false\">{id}</guid>
-</item>",
+        format!(include_str!("templates/post.rss"),
             id = uuid!(self.timestamp),
             time = self.timestamp.to_rfc3339(),
             slug = slug!(self.content, self.timestamp),
             content = self.content,
-            host = HOSTNAME
+            hostname = HOSTNAME
         )
     }
 
     fn as_atom(&self) -> String {
-        format!(
-            "<entry>
-    <title>{time}</title>
-    <link type=\"text/html\" href=\"/{slug}\" />
-    <id>{id}</id>
-    <updated>{time}</updated>
-    <author><name>microbe user</name></author>
-    <content type=\"text\">
-        {content}
-    </content>
-</entry>",
+        format!(include_str!("templates/post.atom"),
             id = uuid!(self.timestamp).urn(),
             time = self.timestamp.to_rfc3339(),
             slug = slug!(self.content, self.timestamp),
@@ -69,13 +53,7 @@ impl Post {
     }
 
     fn as_json(&self) -> String {
-        format!(
-            "{{
-    \"id\": \"{id}\",
-    \"content_text\": \"{content}\",
-    \"url\": \"/{slug}\",
-    \"date_published\": \"{time}\"
-}}",
+        format!(include_str!("templates/post.json"),
             id = uuid!(self.timestamp),
             content = self.content,
             slug = slug!(self.content, self.timestamp),
@@ -136,17 +114,7 @@ fn get_posts(filename: &str) -> Vec<Post> {
 }
 
 fn create_rss_from_posts(posts: &Vec<Post>) -> String {
-    format!(
-        "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<rss version=\"2.0\">
-    <channel>
-        <title>{user}</title>
-        <description>microbe feed by {user}</description>
-        <link>{link}</link>
-        <lastBuildDate>{now}</lastBuildDate>
-        {feeds}
-    </channel>
-</rss>",
+    format!(include_str!("templates/bulk.rss"),
         user = USERNAME,
         link = HOSTNAME,
         now = Utc::now().to_rfc2822(),
@@ -163,17 +131,7 @@ fn create_rss_from_posts(posts: &Vec<Post>) -> String {
 }
 
 fn create_atom_from_posts(posts: &Vec<Post>) -> String {
-    format!("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<feed xmlns=\"http://www.w3.org/2005/Atom\">
-    <title>{user}</title>
-    <subtitle>microbe feed by {user}</subtitle>
-    <link href=\"{host}/feed.atom\" rel=\"self\" />
-    <link href=\"{host}\" />
-    <id>{id}</id>
-    <updated>{now}</updated>
-
-    {feeds}
-</feed>",
+    format!(include_str!("templates/bulk.atom"),
 user = USERNAME,
 host = HOSTNAME,
 now = {
@@ -200,15 +158,7 @@ feeds = {
 }
 
 fn create_json_from_posts(posts: &Vec<Post>) -> String {
-    format!("{{
-    \"version\": \"https://jsonfeed.org/version/1\",
-    \"title\": \"@{user}\",
-    \"home_page_url\": \"{host}\",
-    \"feed_url\": \"{host}/feed.json\",
-    \"items\": [
-        {feeds}
-    ]
-}}",
+    format!(include_str!("templates/bulk.json"),
     user = USERNAME,
     host = HOSTNAME,
     feeds = {
