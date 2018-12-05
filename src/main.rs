@@ -9,10 +9,13 @@ use uuid::Uuid;
 use std::io::BufRead;
 use std::str::FromStr;
 
-// Constant variables.
-static USERNAME: &str = "microbeuser";
-static POSTS_FILE: &str = "microbes";
-static HOSTNAME: &str = "https://example.edu";
+mod constants {
+    // Constant variables.
+    pub static USERNAME: &str = "microbeuser";
+    pub static POSTS_FILE: &str = "microbes";
+    pub static HOSTNAME: &str = "https://example.edu";
+}
+use constants::*;
 
 macro_rules! slug {
     ($c:expr, $t:expr) => (
@@ -27,7 +30,7 @@ macro_rules! uuid {
 }
 
 #[derive(Debug, Clone)]
-struct Post {
+pub struct Post {
     content: String,
     timestamp: DateTime<chrono::offset::Utc>,
 }
@@ -39,7 +42,7 @@ impl Post {
             time = self.timestamp.to_rfc3339(),
             slug = slug!(self.content, self.timestamp),
             content = self.content,
-            hostname = HOSTNAME
+            hostname = constants::HOSTNAME
         )
     }
 
@@ -115,8 +118,8 @@ fn get_posts(filename: &str) -> Vec<Post> {
 
 fn create_rss_from_posts(posts: &Vec<Post>) -> String {
     format!(include_str!("templates/bulk.rss"),
-        user = USERNAME,
-        link = HOSTNAME,
+        user = constants::USERNAME,
+        link = constants::HOSTNAME,
         now = Utc::now().to_rfc2822(),
         feeds = {
             let mut ret = "".to_string();
@@ -132,8 +135,8 @@ fn create_rss_from_posts(posts: &Vec<Post>) -> String {
 
 fn create_atom_from_posts(posts: &Vec<Post>) -> String {
     format!(include_str!("templates/bulk.atom"),
-user = USERNAME,
-host = HOSTNAME,
+user = constants::USERNAME,
+host = constants::HOSTNAME,
 now = {
     // TODO refactor this code
     #[cfg(test)]
@@ -145,7 +148,7 @@ now = {
         Utc::now()
     }
 }.to_rfc2822(),
-id = uuid!(USERNAME).urn(),
+id = uuid!(constants::USERNAME).urn(),
 feeds = {
     let mut ret = "".to_string();
 
@@ -159,8 +162,8 @@ feeds = {
 
 fn create_json_from_posts(posts: &Vec<Post>) -> String {
     format!(include_str!("templates/bulk.json"),
-    user = USERNAME,
-    host = HOSTNAME,
+    user = constants::USERNAME,
+    host = constants::HOSTNAME,
     feeds = {
         let mut ret = "".to_string();
 
@@ -174,8 +177,8 @@ fn create_json_from_posts(posts: &Vec<Post>) -> String {
 
 fn main() {
     println!(
-        "# microbe for @{} (POSTS_FILE={}, HOSTNAME={})",
-        USERNAME, POSTS_FILE, HOSTNAME
+        "# microbe for @{} (POSTS_FILE={}, constants::HOSTNAME={})",
+        constants::USERNAME, POSTS_FILE, constants::HOSTNAME
     );
 
     let posts = get_posts(POSTS_FILE);
@@ -216,19 +219,6 @@ mod tests {
                 chrono::offset::Utc,
             ),
         }
-    }
-
-    #[test]
-    fn post_to_rss() {
-        assert_eq!(
-            example_post().as_rss(),
-            format!("<item>
-    <title>1970-01-01T00:00:00+00:00</title>
-    <description>Hello World, how are you today?</description>
-    <link>{link}/0_hello-world-how-are-you</link>
-    <guid isPermaLink=\"false\">86675203-8e40-5254-94ea-8c8f6f255bf1</guid>
-</item>"
-        , link = HOSTNAME));
     }
 
     #[test]
@@ -280,8 +270,8 @@ mod tests {
 </item>
     </channel>
 </rss>",
-user = USERNAME,
-link = HOSTNAME,
+user = constants::USERNAME,
+link = constants::HOSTNAME,
 now = Utc::now().to_rfc2822()))
     }
 
@@ -309,10 +299,10 @@ now = Utc::now().to_rfc2822()))
     </content>
 </entry>
 </feed>",
-user = USERNAME,
-host = HOSTNAME,
+user = constants::USERNAME,
+host = constants::HOSTNAME,
 now = Utc.timestamp(0, 0).to_rfc2822(),
-id = uuid!(USERNAME).urn()))
+id = uuid!(constants::USERNAME).urn()))
     }
 
     #[test]
@@ -333,7 +323,7 @@ id = uuid!(USERNAME).urn()))
 }}
     ]
 }}",
-user = USERNAME,
-host = HOSTNAME));
+user = constants::USERNAME,
+host = constants::HOSTNAME));
 }
 }

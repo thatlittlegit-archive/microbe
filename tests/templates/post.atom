@@ -1,0 +1,12 @@
+<entry>
+	<title>1970-01-01T00:00:00+00:00</title>
+	<link type="text/html" href="/0_hello-world-how-are-you" />
+	<id>urn:uuid:86675203-8e40-5254-94ea-8c8f6f255bf1</id>
+	<updated>1970-01-01T00:00:00+00:00</updated>
+	<author>
+		<name>microbe user</name>
+	</author>
+	<content type="text">
+		Hello World, how are you today?
+	</content>
+</entry>
